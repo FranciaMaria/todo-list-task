@@ -4034,13 +4034,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             task: {
                 name: '',
-                description: ''
+                description: '',
+                priority: '',
+                completed: false
             },
             errors: [],
             tasks: [],
@@ -4060,7 +4079,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.post('/task', {
                 name: this.task.name,
-                description: this.task.description
+                description: this.task.description,
+                priority: this.task.priority
             }).then(function (response) {
 
                 _this.reset();
@@ -4077,11 +4097,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (error.response.data.errors.description) {
                     _this.errors.push(error.response.data.errors.description[0]);
                 }
+
+                if (error.response.data.errors.priority) {
+                    _this.errors.push(error.response.data.errors.priority[0]);
+                }
             });
         },
         reset: function reset() {
             this.task.name = '';
             this.task.description = '';
+            this.task.priority = '';
         },
         readTasks: function readTasks() {
             var _this2 = this;
@@ -4101,7 +4126,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.patch('/task/' + this.update_task.id, {
                 name: this.update_task.name,
-                description: this.update_task.description
+                description: this.update_task.description,
+                priority: this.update_task.priority
             }).then(function (response) {
 
                 $("#update_task_model").modal("hide");
@@ -4114,12 +4140,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (error.response.data.errors.description) {
                     _this3.errors.push(error.response.data.errors.description[0]);
                 }
+
+                if (error.response.data.errors.priority) {
+                    _this3.errors.push(error.response.data.errors.priority[0]);
+                }
             });
         },
+
+
+        toggleTaskCompletion: function toggleTaskCompletion(task) {
+
+            task.completed = !task.completed;
+        },
+
         deleteTask: function deleteTask(task) {
             var _this4 = this;
 
-            var conf = confirm("Do you ready want to delete this task?");
+            var conf = confirm("Do you really want to delete this task?");
             if (conf === true) {
 
                 axios.delete('/task/' + task.id).then(function (response) {
@@ -4200,6 +4237,27 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(task.priority) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-warning btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.toggleTaskCompletion(task)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Completed")]
+                              ),
+                              _vm._v(" "),
                               _c(
                                 "button",
                                 {
@@ -4330,6 +4388,40 @@ var render = function() {
                       }
                     }
                   })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "priority" } }, [
+                    _vm._v("Priority:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.priority,
+                        expression: "task.priority"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "priority",
+                      id: "priority",
+                      placeholder:
+                        "Task Priority: Very important, Important, Less Imporatnt, Unimportant"
+                    },
+                    domProps: { value: _vm.task.priority },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.task, "priority", $event.target.value)
+                      }
+                    }
+                  })
                 ])
               ]),
               _vm._v(" "),
@@ -4447,6 +4539,44 @@ var render = function() {
                       }
                     }
                   })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "priority" } }, [
+                    _vm._v("Priority:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.update_task.priority,
+                        expression: "update_task.priority"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "priority",
+                      id: "priority",
+                      placeholder:
+                        "Task Priority: Very important, Important, Less Imporatnt, Unimportant"
+                    },
+                    domProps: { value: _vm.update_task.priority },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.update_task,
+                          "priority",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
                 ])
               ]),
               _vm._v(" "),
@@ -4498,6 +4628,12 @@ var staticRenderFns = [
       _c("th", [
         _vm._v(
           "\n                                Description\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Priority\n                            "
         )
       ]),
       _vm._v(" "),

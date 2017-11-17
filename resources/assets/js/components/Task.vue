@@ -23,6 +23,9 @@
                                 <th>
                                     Description
                                 </th>
+                                  <th>
+                                    Priority
+                                </th>
                                 <th>
                                     Action
                                 </th>
@@ -36,6 +39,10 @@
                                     {{ task.description }}
                                 </td>
                                 <td>
+                                    {{ task.priority }}
+                                </td>
+                                <td>
+                                    <button @click="toggleTaskCompletion(task)" class="btn btn-warning btn-xs">Completed</button>
                                     <button @click="initUpdate(index)" class="btn btn-success btn-xs">Edit</button>
                                     <button @click="deleteTask(task)" class="btn btn-danger btn-xs">Delete</button>
                                 </td>
@@ -73,6 +80,11 @@
                             <textarea name="description" id="description" cols="30" rows="5" class="form-control"
                                       placeholder="Task Description" v-model="task.description"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label for="priority">Priority:</label>
+                            <input type="text" name="priority" id="priority" placeholder="Task Priority: Very important, Important, Less Imporatnt, Unimportant" class="form-control"
+                                   v-model="task.priority">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -108,6 +120,11 @@
                             <textarea cols="30" rows="5" class="form-control"
                                       placeholder="Task Description" v-model="update_task.description"></textarea>
                         </div>
+                        <div class="form-group">
+                            <label for="priority">Priority:</label>
+                            <input type="text" name="priority" id="priority" placeholder="Task Priority: Very important, Important, Less Imporatnt, Unimportant" class="form-control"
+                                   v-model="update_task.priority">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -126,7 +143,9 @@
             return {
                 task: {
                     name: '',
-                    description: ''
+                    description: '',
+                    priority: '',
+                    completed : false
                 },
                 errors: [],
                 tasks: [],
@@ -147,6 +166,7 @@
                 axios.post('/task', {
                     name: this.task.name,
                     description: this.task.description,
+                    priority: this.task.priority,
                 })
                     .then(response => {
 
@@ -166,12 +186,17 @@
                         if (error.response.data.errors.description) {
                             this.errors.push(error.response.data.errors.description[0]);
                         }
+
+                        if (error.response.data.errors.priority) {
+                            this.errors.push(error.response.data.errors.priority[0]);
+                        }
                     });
             },
             reset()
             {
                 this.task.name = '';
                 this.task.description = '';
+                this.task.priority = '';
             },
             readTasks()
             {
@@ -193,6 +218,7 @@
                 axios.patch('/task/' + this.update_task.id, {
                     name: this.update_task.name,
                     description: this.update_task.description,
+                    priority: this.update_task.priority,
                 })
                     .then(response => {
 
@@ -208,12 +234,22 @@
                         if (error.response.data.errors.description) {
                             this.errors.push(error.response.data.errors.description[0]);
                         }
+
+                        if (error.response.data.errors.priority) {
+                            this.errors.push(error.response.data.errors.priority[0]);
+                        }
                     });
+            },
+
+            toggleTaskCompletion: function(task) {
+
+                task.completed = ! task.completed;
+            
             },
 
             deleteTask(task)
             {
-                let conf = confirm("Do you ready want to delete this task?");
+                let conf = confirm("Do you really want to delete this task?");
                 if (conf === true) {
 
                     axios.delete('/task/' + task.id)

@@ -18,6 +18,8 @@ class CreateTasksTable extends Migration
             $table->string('name');
             $table->unsignedInteger('user_id');
             $table->text('description');
+            $table->text('priority');
+            $table->boolean('completed')->default(0);
             $table->timestamps();
         });
     }

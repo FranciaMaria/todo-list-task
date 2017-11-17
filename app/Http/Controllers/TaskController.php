@@ -28,12 +28,14 @@ class TaskController extends Controller
         $this->validate($request, [
             'name'        => 'required|max:255',
             'description' => 'required',
+            'priority' => 'required'
         ]);
 
         $task = Task::create([
             'name'        => request('name'),
             'description' => request('description'),
-            'user_id'     => Auth::user()->id
+            'user_id'     => Auth::user()->id,
+            'priority' => request('priority')
         ]);
 
         return response()->json([
@@ -47,10 +49,13 @@ class TaskController extends Controller
         $this->validate($request, [
             'name'        => 'required|max:255',
             'description' => 'required',
+            'priority' => 'required'
         ]);
 
         $task->name = request('name');
         $task->description = request('description');
+        $task->priority = request('priority');
+
         $task->save();
 
         return response()->json([
@@ -61,6 +66,13 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
+        //return 204;
+        return $task;
+    }
+
+    public function completed(Task $task)
+    {
+        $task->completed = true;
         //return 204;
         return $task;
     }
