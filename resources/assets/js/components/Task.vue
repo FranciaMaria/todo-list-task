@@ -47,9 +47,7 @@
                                     <button @click="deleteTask(task)" class="btn btn-danger btn-xs">Delete</button>
                                 </td>
                                 <td v-if="task.completed != false">
-                                    <!-- <button @click="completed(task)" class="btn btn-warning btn-xs">Uncompleted</button> -->
-                                    <button @click="completedTask(task)" class="btn btn-warning btn-xs">Completed</button>
-                                    <!-- <button @click="initUpdate(index)" class="btn btn-success btn-xs">Edit</button> -->
+                                    <button @click="completedTask(task)" class="btn btn-default btn-xs">Completed</button>
                                     <button @click="deleteTask(task)" class="btn btn-danger btn-xs">Delete</button>
                                 </td>
                             </tr>
@@ -87,9 +85,6 @@
                                       placeholder="Task Description" v-model="task.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <!-- <label for="priority">Priority:</label>
-                            <input type="text" name="priority" id="priority" placeholder="Task Priority: Very important, Important, Less Imporatnt, Unimportant" class="form-control"
-                                   v-model="task.priority"> -->
                             <input type="radio" id="very important" value="very important" v-model="task.priority">
                             <label for="very important">Very Important</label>
                             <br>
@@ -137,9 +132,6 @@
                                       placeholder="Task Description" v-model="update_task.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <!-- <label for="priority">Priority:</label>
-                            <input type="text" name="priority" id="priority" placeholder="Task Priority: Very important, Important, Less Imporatnt, Unimportant" class="form-control"
-                                   v-model="update_task.priority"> -->
                             <input type="radio" id="very important" value="very important" v-model="update_task.priority">
                             <label for="very important">Very Important</label>
                             <br>
@@ -298,7 +290,6 @@
                     axios.put('/task/completed/' + task.id)
                         .then(response => {
 
-                            //task.completed = ! task.completed;
                             this.task.completed = false;
 
                         })

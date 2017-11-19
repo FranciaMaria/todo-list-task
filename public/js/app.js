@@ -4069,14 +4069,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -4196,7 +4188,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 axios.put('/task/completed/' + task.id).then(function (response) {
 
-                    //task.completed = ! task.completed;
                     _this5.task.completed = false;
                 }).catch(function (error) {});
 
@@ -4342,7 +4333,7 @@ var render = function() {
                                   _c(
                                     "button",
                                     {
-                                      staticClass: "btn btn-warning btn-xs",
+                                      staticClass: "btn btn-default btn-xs",
                                       on: {
                                         click: function($event) {
                                           _vm.completedTask(task)

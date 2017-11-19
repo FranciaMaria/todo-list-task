@@ -66,14 +66,12 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        //return 204;
         return $task;
     }
 
     public function completeTask(Task $task)
     {
         $task->completed = true;
-        //return 204;
         $task->save();
         return $task;
     }
@@ -81,7 +79,6 @@ class TaskController extends Controller
     public function completedTask(Task $task)
     {
         $task->completed = false;
-        //return 204;
         $task->save();
         return $task;
     }
