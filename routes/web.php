@@ -23,4 +23,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('/task', 'TaskController');
-Route::put('/task/completed/{task}', 'TaskController@completed');
+Route::put('/task/complete/{task}', 'TaskController@completeTask');
+Route::put('/task/completed/{task}', 'TaskController@completedTask');

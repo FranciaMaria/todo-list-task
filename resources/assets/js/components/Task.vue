@@ -41,9 +41,15 @@
                                 <td>
                                     {{ task.priority }}
                                 </td>
-                                <td>
-                                    <button @click="toggleTaskCompletion(task)" class="btn btn-warning btn-xs">Completed</button>
+                                <td v-if="task.completed != true">
+                                    <button @click="completeTask(task)" class="btn btn-warning btn-xs">Complete</button>
                                     <button @click="initUpdate(index)" class="btn btn-success btn-xs">Edit</button>
+                                    <button @click="deleteTask(task)" class="btn btn-danger btn-xs">Delete</button>
+                                </td>
+                                <td v-if="task.completed != false">
+                                    <!-- <button @click="completed(task)" class="btn btn-warning btn-xs">Uncompleted</button> -->
+                                    <button @click="completedTask(task)" class="btn btn-warning btn-xs">Completed</button>
+                                    <!-- <button @click="initUpdate(index)" class="btn btn-success btn-xs">Edit</button> -->
                                     <button @click="deleteTask(task)" class="btn btn-danger btn-xs">Delete</button>
                                 </td>
                             </tr>
@@ -81,9 +87,19 @@
                                       placeholder="Task Description" v-model="task.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="priority">Priority:</label>
+                            <!-- <label for="priority">Priority:</label>
                             <input type="text" name="priority" id="priority" placeholder="Task Priority: Very important, Important, Less Imporatnt, Unimportant" class="form-control"
-                                   v-model="task.priority">
+                                   v-model="task.priority"> -->
+                            <input type="radio" id="very important" value="very important" v-model="task.priority">
+                            <label for="very important">Very Important</label>
+                            <br>
+                            <input type="radio" id="important" value="important" v-model="task.priority">
+                            <label for="important">Important</label>
+                            <br>
+                            <input type="radio" id="less important" value="less important" v-model="task.priority">
+                            <label for="less important">Less Important</label>
+                            <br>
+                            <span>Priority: {{ task.priority }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -121,9 +137,19 @@
                                       placeholder="Task Description" v-model="update_task.description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="priority">Priority:</label>
+                            <!-- <label for="priority">Priority:</label>
                             <input type="text" name="priority" id="priority" placeholder="Task Priority: Very important, Important, Less Imporatnt, Unimportant" class="form-control"
-                                   v-model="update_task.priority">
+                                   v-model="update_task.priority"> -->
+                            <input type="radio" id="very important" value="very important" v-model="update_task.priority">
+                            <label for="very important">Very Important</label>
+                            <br>
+                            <input type="radio" id="important" value="important" v-model="update_task.priority">
+                            <label for="important">Important</label>
+                            <br>
+                            <input type="radio" id="less important" value="less important" v-model="update_task.priority">
+                            <label for="less important">Less Important</label>
+                            <br>
+                            <span>Priority: {{ update_task.priority }}</span>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -191,6 +217,8 @@
                             this.errors.push(error.response.data.errors.priority[0]);
                         }
                     });
+
+                    window.location.href = "http://localhost:8000/home";
             },
             reset()
             {
@@ -241,9 +269,46 @@
                     });
             },
 
-            toggleTaskCompletion: function(task) {
+            completeTask(task) {
 
-                task.completed = ! task.completed;
+                let conf = confirm("Completed?");
+                if (conf === true) {
+
+                    axios.put('/task/complete/' + task.id)
+                        .then(response => {
+
+                            this.task.completed = true;
+
+                        })
+                        .catch(error => {
+
+                        });
+
+                    window.location.href = "http://localhost:8000/home";
+
+                }
+            
+            },
+
+            completedTask(task) {
+
+                let conf = confirm("Uncompleted this task?");
+                if (conf === true) {
+
+                    axios.put('/task/completed/' + task.id)
+                        .then(response => {
+
+                            //task.completed = ! task.completed;
+                            this.task.completed = false;
+
+                        })
+                        .catch(error => {
+
+                        });
+
+                    window.location.href = "http://localhost:8000/home";
+
+                }
             
             },
 

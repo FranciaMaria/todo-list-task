@@ -4051,6 +4051,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -4102,6 +4128,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.errors.push(error.response.data.errors.priority[0]);
                 }
             });
+
+            window.location.href = "http://localhost:8000/home";
         },
         reset: function reset() {
             this.task.name = '';
@@ -4146,22 +4174,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
         },
-
-
-        toggleTaskCompletion: function toggleTaskCompletion(task) {
-
-            task.completed = !task.completed;
-        },
-
-        deleteTask: function deleteTask(task) {
+        completeTask: function completeTask(task) {
             var _this4 = this;
+
+            var conf = confirm("Completed?");
+            if (conf === true) {
+
+                axios.put('/task/complete/' + task.id).then(function (response) {
+
+                    _this4.task.completed = true;
+                }).catch(function (error) {});
+
+                window.location.href = "http://localhost:8000/home";
+            }
+        },
+        completedTask: function completedTask(task) {
+            var _this5 = this;
+
+            var conf = confirm("Uncompleted this task?");
+            if (conf === true) {
+
+                axios.put('/task/completed/' + task.id).then(function (response) {
+
+                    //task.completed = ! task.completed;
+                    _this5.task.completed = false;
+                }).catch(function (error) {});
+
+                window.location.href = "http://localhost:8000/home";
+            }
+        },
+        deleteTask: function deleteTask(task) {
+            var _this6 = this;
 
             var conf = confirm("Do you really want to delete this task?");
             if (conf === true) {
 
                 axios.delete('/task/' + task.id).then(function (response) {
 
-                    _this4.tasks.splice(task.id, 1);
+                    _this6.tasks.splice(task.id, 1);
                 }).catch(function (error) {});
 
                 window.location.href = "http://localhost:8000/home";
@@ -4244,46 +4294,78 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _c("td", [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-warning btn-xs",
-                                  on: {
-                                    click: function($event) {
-                                      _vm.toggleTaskCompletion(task)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Completed")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-success btn-xs",
-                                  on: {
-                                    click: function($event) {
-                                      _vm.initUpdate(index)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Edit")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-danger btn-xs",
-                                  on: {
-                                    click: function($event) {
-                                      _vm.deleteTask(task)
-                                    }
-                                  }
-                                },
-                                [_vm._v("Delete")]
-                              )
-                            ])
+                            task.completed != true
+                              ? _c("td", [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-warning btn-xs",
+                                      on: {
+                                        click: function($event) {
+                                          _vm.completeTask(task)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Complete")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-success btn-xs",
+                                      on: {
+                                        click: function($event) {
+                                          _vm.initUpdate(index)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Edit")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-danger btn-xs",
+                                      on: {
+                                        click: function($event) {
+                                          _vm.deleteTask(task)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Delete")]
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            task.completed != false
+                              ? _c("td", [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-warning btn-xs",
+                                      on: {
+                                        click: function($event) {
+                                          _vm.completedTask(task)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Completed")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-danger btn-xs",
+                                      on: {
+                                        click: function($event) {
+                                          _vm.deleteTask(task)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Delete")]
+                                  )
+                                ])
+                              : _vm._e()
                           ])
                         })
                       ],
@@ -4391,9 +4473,35 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "priority" } }, [
-                    _vm._v("Priority:")
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.priority,
+                        expression: "task.priority"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      id: "very important",
+                      value: "very important"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.task.priority, "very important")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.task, "priority", "very important")
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "very important" } }, [
+                    _vm._v("Very Important")
                   ]),
+                  _vm._v(" "),
+                  _c("br"),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -4404,24 +4512,58 @@ var render = function() {
                         expression: "task.priority"
                       }
                     ],
-                    staticClass: "form-control",
                     attrs: {
-                      type: "text",
-                      name: "priority",
-                      id: "priority",
-                      placeholder:
-                        "Task Priority: Very important, Important, Less Imporatnt, Unimportant"
+                      type: "radio",
+                      id: "important",
+                      value: "important"
                     },
-                    domProps: { value: _vm.task.priority },
+                    domProps: {
+                      checked: _vm._q(_vm.task.priority, "important")
+                    },
                     on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.task, "priority", $event.target.value)
+                      change: function($event) {
+                        _vm.$set(_vm.task, "priority", "important")
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "important" } }, [
+                    _vm._v("Important")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.task.priority,
+                        expression: "task.priority"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      id: "less important",
+                      value: "less important"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.task.priority, "less important")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.task, "priority", "less important")
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "less important" } }, [
+                    _vm._v("Less Important")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Priority: " + _vm._s(_vm.task.priority))])
                 ])
               ]),
               _vm._v(" "),
@@ -4542,9 +4684,38 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "priority" } }, [
-                    _vm._v("Priority:")
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.update_task.priority,
+                        expression: "update_task.priority"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      id: "very important",
+                      value: "very important"
+                    },
+                    domProps: {
+                      checked: _vm._q(
+                        _vm.update_task.priority,
+                        "very important"
+                      )
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.update_task, "priority", "very important")
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "very important" } }, [
+                    _vm._v("Very Important")
                   ]),
+                  _vm._v(" "),
+                  _c("br"),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -4555,28 +4726,63 @@ var render = function() {
                         expression: "update_task.priority"
                       }
                     ],
-                    staticClass: "form-control",
                     attrs: {
-                      type: "text",
-                      name: "priority",
-                      id: "priority",
-                      placeholder:
-                        "Task Priority: Very important, Important, Less Imporatnt, Unimportant"
+                      type: "radio",
+                      id: "important",
+                      value: "important"
                     },
-                    domProps: { value: _vm.update_task.priority },
+                    domProps: {
+                      checked: _vm._q(_vm.update_task.priority, "important")
+                    },
                     on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.update_task,
-                          "priority",
-                          $event.target.value
-                        )
+                      change: function($event) {
+                        _vm.$set(_vm.update_task, "priority", "important")
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "important" } }, [
+                    _vm._v("Important")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.update_task.priority,
+                        expression: "update_task.priority"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      id: "less important",
+                      value: "less important"
+                    },
+                    domProps: {
+                      checked: _vm._q(
+                        _vm.update_task.priority,
+                        "less important"
+                      )
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.update_task, "priority", "less important")
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("label", { attrs: { for: "less important" } }, [
+                    _vm._v("Less Important")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("span", [
+                    _vm._v("Priority: " + _vm._s(_vm.update_task.priority))
+                  ])
                 ])
               ]),
               _vm._v(" "),
